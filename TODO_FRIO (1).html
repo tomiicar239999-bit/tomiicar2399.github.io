@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TODO FRÍO - Mantenimiento de aire acondicionado con suscripción mensual</title>
+<style>
+  :root {
+    --primary: #0a84ff;
+    --primary-dark: #0060c7;
+    --accent: #20c997;
+    --dark: #0f172a;
+    --gray: #64748b;
+    --light: #f1f5f9;
+    --white: #ffffff;
+    --radius: 16px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: var(--dark); line-height: 1.6; background: var(--white); }
+  a { color: inherit; text-decoration: none; }
+  .container { max-width: 1140px; margin: 0 auto; padding: 0 20px; }
+  section { padding: 80px 0; }
+  h1, h2, h3 { line-height: 1.2; }
+  h2 { font-size: 2.2rem; text-align: center; margin-bottom: 12px; }
+  .subtitle { text-align: center; color: var(--gray); max-width: 640px; margin: 0 auto 48px; }
+  .btn { display: inline-block; padding: 14px 28px; border-radius: 999px; font-weight: 600; border: none; cursor: pointer; font-size: 1rem; transition: all .2s; }
+  .btn-primary { background: var(--primary); color: #fff; }
+  .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); }
+  .btn-outline { border: 2px solid #fff; color: #fff; background: transparent; }
+  .btn-outline:hover { background: #fff; color: var(--dark); }
+
+  /* Header */
+  header { position: sticky; top: 0; background: rgba(255,255,255,.95); backdrop-filter: blur(8px); z-index: 100; border-bottom: 1px solid #e2e8f0; }
+  .nav { display: flex; justify-content: space-between; align-items: center; height: 72px; }
+  .logo { font-weight: 800; font-size: 1.5rem; color: var(--primary); }
+  .logo span { color: var(--accent); }
+  nav ul { display: flex; gap: 28px; list-style: none; }
+  nav a { font-weight: 500; color: var(--gray); transition: color .2s; }
+  nav a:hover { color: var(--primary); }
+  .menu-toggle { display: none; background: none; border: none; font-size: 1.8rem; cursor: pointer; }
+
+  /* Hero */
+  .hero { background: linear-gradient(135deg, var(--dark) 0%, #1e3a8a 100%); color: #fff; padding: 110px 0; }
+  .hero-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 48px; align-items: center; }
+  .hero h1 { font-size: 3rem; margin-bottom: 20px; }
+  .hero h1 span { color: var(--accent); }
+  .hero p { font-size: 1.15rem; opacity: .9; margin-bottom: 32px; }
+  .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+  .hero-card { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15); border-radius: var(--radius); padding: 36px; }
+  .hero-card h3 { margin-bottom: 16px; }
+  .hero-card ul { list-style: none; }
+  .hero-card li { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,.1); display: flex; gap: 12px; }
+  .hero-card li:last-child { border: none; }
+  .check { color: var(--accent); font-weight: 700; }
+
+  /* Stats */
+  .stats { background: var(--light); padding: 48px 0; }
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; text-align: center; }
+  .stat-number { font-size: 2.4rem; font-weight: 800; color: var(--primary); }
+  .stat-label { color: var(--gray); font-size: .95rem; }
+
+  /* Services */
+  .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .card { background: var(--white); border: 1px solid #e2e8f0; border-radius: var(--radius); padding: 32px; transition: transform .2s, box-shadow .2s; }
+  .card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(15,23,42,.08); }
+  .icon { width: 56px; height: 56px; border-radius: 14px; background: #e0f2fe; display: grid; place-items: center; font-size: 1.6rem; margin-bottom: 18px; }
+  .card h3 { margin-bottom: 10px; font-size: 1.2rem; }
+  .card p { color: var(--gray); font-size: .95rem; }
+
+  /* How it works */
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; counter-reset: step; }
+  .step { text-align: center; padding: 20px; }
+  .step-num { width: 52px; height: 52px; margin: 0 auto 16px; border-radius: 50%; background: var(--primary); color: #fff; display: grid; place-items: center; font-weight: 700; font-size: 1.2rem; }
+  .step h3 { margin-bottom: 8px; }
+  .step p { color: var(--gray); }
+
+  /* Pricing */
+  .pricing { background: var(--light); }
+  .toggle-wrap { display: flex; justify-content: center; align-items: center; gap: 12px; margin-bottom: 40px; font-weight: 600; }
+  .switch { position: relative; width: 52px; height: 28px; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .slider { position: absolute; inset: 0; background: #cbd5e1; border-radius: 999px; cursor: pointer; transition: .3s; }
+  .slider::before { content: ""; position: absolute; width: 22px; height: 22px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: .3s; }
+  .switch input:checked + .slider { background: var(--accent); }
+  .switch input:checked + .slider::before { transform: translateX(24px); }
+  .save-badge { background: #dcfce7; color: #166534; font-size: .8rem; padding: 3px 10px; border-radius: 999px; }
+  .plans { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; align-items: stretch; }
+  .plan { background: #fff; border-radius: var(--radius); padding: 36px 30px; border: 2px solid transparent; display: flex; flex-direction: column; position: relative; }
+  .plan.featured { border-color: var(--primary); box-shadow: 0 16px 40px rgba(10,132,255,.18); }
+  .plan .tag { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: var(--primary); color: #fff; font-size: .8rem; font-weight: 600; padding: 6px 16px; border-radius: 999px; white-space: nowrap; }
+  .plan h3 { font-size: 1.4rem; }
+  .plan .desc { color: var(--gray); font-size: .95rem; margin: 6px 0 20px; }
+  .price { font-size: 2.8rem; font-weight: 800; }
+  .price small { font-size: 1rem; color: var(--gray); font-weight: 500; }
+  .plan ul { list-style: none; margin: 24px 0 32px; flex: 1; }
+  .plan li { padding: 8px 0; font-size: .95rem; display: flex; gap: 10px; }
+  .plan .btn { width: 100%; text-align: center; }
+  .btn-plan { background: var(--dark); color: #fff; }
+  .btn-plan:hover { background: #1e293b; }
+  .note { text-align: center; color: var(--gray); font-size: .9rem; margin-top: 28px; }
+
+  /* FAQ */
+  .faq { max-width: 760px; margin: 0 auto; }
+  details { border-bottom: 1px solid #e2e8f0; padding: 20px 0; }
+  summary { font-weight: 600; cursor: pointer; font-size: 1.05rem; list-style: none; display: flex; justify-content: space-between; }
+  summary::after { content: "+"; font-size: 1.4rem; color: var(--primary); }
+  details[open] summary::after { content: "−"; }
+  details p { color: var(--gray); margin-top: 12px; }
+
+  /* Contact */
+  .contact { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: #fff; }
+  .contact h2 { color: #fff; }
+  .contact .subtitle { color: rgba(255,255,255,.85); }
+  .form-box { max-width: 620px; margin: 0 auto; background: #fff; color: var(--dark); border-radius: var(--radius); padding: 40px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .field { margin-bottom: 16px; display: flex; flex-direction: column; }
+  label { font-weight: 600; font-size: .9rem; margin-bottom: 6px; }
+  input, select, textarea { padding: 12px 14px; border: 1px solid #cbd5e1; border-radius: 10px; font: inherit; }
+  input:focus, select:focus, textarea:focus { outline: 2px solid var(--primary); border-color: transparent; }
+  .form-box .btn { width: 100%; }
+  .form-msg { margin-top: 16px; text-align: center; font-weight: 600; color: #166534; display: none; }
+
+  /* Footer */
+  footer { background: var(--dark); color: #94a3b8; padding: 48px 0 24px; }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 32px; margin-bottom: 32px; }
+  footer h4 { color: #fff; margin-bottom: 12px; }
+  footer a:hover { color: #fff; }
+  footer li { list-style: none; margin-bottom: 8px; }
+  .copy { border-top: 1px solid #1e293b; padding-top: 20px; text-align: center; font-size: .9rem; }
+
+  /* Floating WhatsApp */
+  .wa { position: fixed; bottom: 24px; right: 24px; background: #25d366; color: #fff; padding: 14px 20px; border-radius: 999px; font-weight: 600; box-shadow: 0 8px 20px rgba(0,0,0,.2); z-index: 99; }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 2.3rem; }
+    .services-grid, .plans, .steps { grid-template-columns: 1fr; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .footer-grid { grid-template-columns: 1fr; }
+    nav ul { display: none; }
+    nav ul.open { display: flex; flex-direction: column; position: absolute; top: 72px; left: 0; right: 0; background: #fff; padding: 20px; gap: 16px; border-bottom: 1px solid #e2e8f0; }
+    .menu-toggle { display: block; }
+    .plans .plan.featured { order: -1; }
+  }
+  @media (max-width: 560px) {
+    section { padding: 56px 0; }
+    .form-row { grid-template-columns: 1fr; }
+    .form-box { padding: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container nav">
+    <a href="#" class="logo">TODO<span> FRÍO</span></a>
+    <ul id="menu">
+      <li><a href="#servicios">Servicios</a></li>
+      <li><a href="#como-funciona">Cómo funciona</a></li>
+      <li><a href="#planes">Planes</a></li>
+      <li><a href="#faq">Preguntas</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ul>
+    <button class="menu-toggle" id="toggle" aria-label="Menú">☰</button>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container hero-grid">
+    <div>
+      <h1>Tu aire acondicionado <span>siempre listo</span>, sin sorpresas</h1>
+      <p>Mantenimiento preventivo mensual para tu hogar u oficina. Limpieza, revisión y técnicos certificados por una tarifa fija al mes. Ahorra energía, evita averías y alarga la vida de tu equipo.</p>
+      <div class="hero-actions">
+        <a href="#planes" class="btn btn-primary">Ver planes</a>
+        <a href="#contacto" class="btn btn-outline">Solicitar visita gratis</a>
+      </div>
+    </div>
+    <div class="hero-card">
+      <h3>Incluido en todos los planes</h3>
+      <ul>
+        <li><span class="check">✓</span> Limpieza de filtros cada mes</li>
+        <li><span class="check">✓</span> Revisión de gas refrigerante y presiones</li>
+        <li><span class="check">✓</span> Desinfección de evaporador</li>
+        <li><span class="check">✓</span> Diagnóstico con informe digital</li>
+        <li><span class="check">✓</span> Atención prioritaria por WhatsApp</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="stats">
+  <div class="container stats-grid">
+    <div><div class="stat-number">+1.200</div><div class="stat-label">Clientes activos</div></div>
+    <div><div class="stat-number">98%</div><div class="stat-label">Clientes que renuevan</div></div>
+    <div><div class="stat-number">30%</div><div class="stat-label">Ahorro promedio en energía</div></div>
+    <div><div class="stat-number">24h</div><div class="stat-label">Tiempo de respuesta</div></div>
+  </div>
+</section>
+
+<section id="servicios">
+  <div class="container">
+    <h2>Servicios incluidos</h2>
+    <p class="subtitle">Un plan de mantenimiento completo para que tu equipo funcione como el primer día.</p>
+    <div class="services-grid">
+      <div class="card"><div class="icon">🧹</div><h3>Limpieza de filtros</h3><p>Filtros lavados y desinfectados para mejor calidad del aire y menor consumo.</p></div>
+      <div class="card"><div class="icon">❄️</div><h3>Limpieza de unidades</h3><p>Limpieza profunda de evaporador y condensador con productos biodegradables.</p></div>
+      <div class="card"><div class="icon">🔧</div><h3>Revisión técnica</h3><p>Control de presiones, gas, conexiones eléctricas y funcionamiento del compresor.</p></div>
+      <div class="card"><div class="icon">📊</div><h3>Informe mensual</h3><p>Recibe por correo un reporte del estado de tu equipo con fotos y recomendaciones.</p></div>
+      <div class="card"><div class="icon">🛡️</div><h3>Garantía de reparación</h3><p>Repuestos y mano de obra cubiertos según tu plan, sin costos ocultos.</p></div>
+      <div class="card"><div class="icon">⚡</div><h3>Prioridad en averías</h3><p>Atención preferente y visitas de urgencia para suscriptores activos.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="como-funciona" style="background:#fff">
+  <div class="container">
+    <h2>¿Cómo funciona?</h2>
+    <p class="subtitle">Empezar toma menos de 5 minutos.</p>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><h3>Elige tu plan</h3><p>Selecciona el plan que mejor se adapte a la cantidad de equipos de tu hogar o negocio.</p></div>
+      <div class="step"><div class="step-num">2</div><h3>Agenda tu visita</h3><p>Te contactamos para programar la primera visita en el día y horario que prefieras.</p></div>
+      <div class="step"><div class="step-num">3</div><h3>Olvídate del resto</h3><p>Cada mes realizamos el mantenimiento y te enviamos el informe. Pagas automáticamente.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="planes" class="pricing">
+  <div class="container">
+    <h2>Planes de suscripción</h2>
+    <p class="subtitle">Sin permanencia. Cancela cuando quieras desde tu cuenta.</p>
+
+    <div class="toggle-wrap">
+      <span>Mensual</span>
+      <label class="switch">
+        <input type="checkbox" id="billing">
+        <span class="slider"></span>
+      </label>
+      <span>Anual <span class="save-badge">Ahorra 15%</span></span>
+    </div>
+
+    <div class="plans">
+      <div class="plan">
+        <h3>Básico</h3>
+        <p class="desc">Ideal para un departamento o una habitación.</p>
+        <div class="price"><span data-m="29" data-a="24">$29</span><small>/mes</small></div>
+        <ul>
+          <li><span class="check">✓</span> Hasta 1 equipo split</li>
+          <li><span class="check">✓</span> Mantenimiento mensual</li>
+          <li><span class="check">✓</span> Limpieza de filtros</li>
+          <li><span class="check">✓</span> Informe digital</li>
+        </ul>
+        <a href="#contacto" class="btn btn-plan">Elegir Básico</a>
+      </div>
+
+      <div class="plan featured">
+        <span class="tag">Más popular</span>
+        <h3>Hogar</h3>
+        <p class="desc">Para casas con varios equipos de climatización.</p>
+        <div class="price"><span data-m="59" data-a="50">$59</span><small>/mes</small></div>
+        <ul>
+          <li><span class="check">✓</span> Hasta 3 equipos</li>
+          <li><span class="check">✓</span> Todo lo del plan Básico</li>
+          <li><span class="check">✓</span> Desinfección de evaporadores</li>
+          <li><span class="check">✓</span> Revisión de gas refrigerante</li>
+          <li><span class="check">✓</span> Prioridad en averías</li>
+        </ul>
+        <a href="#contacto" class="btn btn-primary">Elegir Hogar</a>
+      </div>
+
+      <div class="plan">
+        <h3>Empresa</h3>
+        <p class="desc">Para oficinas, locales y negocios.</p>
+        <div class="price"><span data-m="129" data-a="110">$129</span><small>/mes</small></div>
+        <ul>
+          <li><span class="check">✓</span> Equipos ilimitados</li>
+          <li><span class="check">✓</span> Todo lo del plan Hogar</li>
+          <li><span class="check">✓</span> Visitas de urgencia 24/7</li>
+          <li><span class="check">✓</span> Técnico asignado</li>
+          <li><span class="check">✓</span> Factura para deducción fiscal</li>
+        </ul>
+        <a href="#contacto" class="btn btn-plan">Elegir Empresa</a>
+      </div>
+    </div>
+    <p class="note">Precios en USD + impuestos. Los equipos y repuestos adicionales se cotizan aparte.</p>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="container">
+    <h2>Preguntas frecuentes</h2>
+    <p class="subtitle">Resolvemos tus dudas antes de empezar.</p>
+    <div class="faq">
+      <details>
+        <summary>¿Puedo cancelar la suscripción en cualquier momento?</summary>
+        <p>Sí. No hay permanencia. Puedes cancelar desde tu cuenta en cualquier momento y el cobro se detiene en el siguiente ciclo.</p>
+      </details>
+      <details>
+        <summary>¿Qué pasa si mi equipo necesita una reparación?</summary>
+        <p>Los suscriptores tienen prioridad en la agenda. Las piezas y la mano de obra están cubiertas según el plan contratado; el resto se cotiza antes de realizar cualquier trabajo.</p>
+      </details>
+      <details>
+        <summary>¿Con qué frecuencia vienen los técnicos?</summary>
+        <p>Una visita mensual de mantenimiento preventivo. Las visitas de urgencia se incluyen según tu plan.</p>
+      </details>
+      <details>
+        <summary>¿Trabajan con todas las marcas?</summary>
+        <p>Sí, trabajamos con equipos split, multisplit, de ventana y de conductos de las principales marcas.</p>
+      </details>
+      <details>
+        <summary>¿Cómo se realiza el pago?</summary>
+        <p>Cobro automático con tarjeta cada mes. Recibes la factura por correo electrónico.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section id="contacto" class="contact">
+  <div class="container">
+    <h2>Empieza tu suscripción hoy</h2>
+    <p class="subtitle">Déjanos tus datos y te contactamos en menos de 24 horas para agendar tu primera visita.</p>
+    <div class="form-box">
+      <form id="form">
+        <div class="form-row">
+          <div class="field"><label for="name">Nombre completo</label><input id="name" required placeholder="Ej. María López"></div>
+          <div class="field"><label for="phone">Teléfono / WhatsApp</label><input id="phone" type="tel" required placeholder="+54 9 376 435-1916"></div>
+        </div>
+        <div class="field"><label for="email">Correo electrónico</label><input id="email" type="email" required placeholder="correo@ejemplo.com"></div>
+        <div class="form-row">
+          <div class="field"><label for="plan">Plan de interés</label>
+            <select id="plan">
+              <option>Básico</option>
+              <option selected>Hogar</option>
+              <option>Empresa</option>
+            </select>
+          </div>
+          <div class="field"><label for="units">Número de equipos</label><input id="units" type="number" min="1" value="1"></div>
+        </div>
+        <div class="field"><label for="msg">Comentarios (opcional)</label><textarea id="msg" rows="3" placeholder="Marca, antigüedad del equipo, dirección..."></textarea></div>
+        <button type="submit" class="btn btn-primary">Solicitar visita gratis</button>
+        <p class="form-msg" id="msg-ok">¡Gracias! Te contactaremos pronto.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="logo" style="color:#fff">TODO<span> FRÍO</span></div>
+        <p style="margin-top:12px">Mantenimiento de aire acondicionado por suscripción mensual. Calidad, puntualidad y transparencia.</p>
+      </div>
+      <div>
+        <h4>Navegación</h4>
+        <ul>
+          <li><a href="#servicios">Servicios</a></li>
+          <li><a href="#planes">Planes</a></li>
+          <li><a href="#faq">Preguntas</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contacto</h4>
+        <ul>
+          <li>+54 9 376 435-1916</li>
+          <li>hola@brisaconfort.com</li>
+          <li>Lun–Sáb, 8:00–18:00</li>
+        </ul>
+      </div>
+    </div>
+    <div class="copy">© 2026 TODO FRÍO. Todos los derechos reservados.</div>
+  </div>
+</footer>
+
+<a class="wa" href="https://wa.me/5493764351916" target="_blank">💬 WhatsApp</a>
+
+<script>
+  // Menú móvil
+  const toggle = document.getElementById('toggle');
+  const menu = document.getElementById('menu');
+  toggle.addEventListener('click', () => menu.classList.toggle('open'));
+  menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => menu.classList.remove('open')));
+
+  // Cambio de precio mensual / anual
+  const billing = document.getElementById('billing');
+  billing.addEventListener('change', () => {
+    document.querySelectorAll('.price span[data-m]').forEach(el => {
+      el.textContent = '$' + (billing.checked ? el.dataset.a : el.dataset.m);
+    });
+    document.querySelectorAll('.price small').forEach(el => {
+      el.textContent = billing.checked ? '/mes (facturado anual)' : '/mes';
+    });
+  });
+
+  // Formulario (simulado; conecta aquí tu backend o CRM)
+  document.getElementById('form').addEventListener('submit', e => {
+    e.preventDefault();
+    document.getElementById('msg-ok').style.display = 'block';
+    e.target.reset();
+  });
+</script>
+</body>
+</html>
